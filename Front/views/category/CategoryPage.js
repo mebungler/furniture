@@ -9,14 +9,12 @@ class CategoryPage extends React.Component {
         let param = getUrlParameter("catalogId");
         if (param === ""){
             this.props.dispatch(populateCategoriesAsync());
-            console.log(param==="");
         }
         else
             this.props.dispatch(populateCategoriesAsync(param));
     }
 
     render() {
-        console.log(this.props.categories);
         return (
             <div>
                 <div className="row">
@@ -31,7 +29,10 @@ class CategoryPage extends React.Component {
                     <div className="panel-heading">
                         Category
                         <span className="pull-right">
-                               <a onClick={() => this.props.history.push("/categoryAddOrEdit")}
+                               <a onClick={() => {
+                                   this.props.dispatch(storeCategory({}));
+                                   this.props.history.push("/categoryAddOrEdit")
+                               }}
                                   className="btn btn-md btn-success">
                                    <span className="fa fa-plus"/> Add Category
                                </a>

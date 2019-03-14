@@ -39,28 +39,39 @@ const SideBar = ({children: Children, user, ...rest}) => {
                     <li><NavLink to="/dashboard"><em
                         className="fa fa-home">&nbsp;</em> Dashboard</NavLink>
                     </li>
-                    <li className="parent "><a data-toggle="collapse" href="#sub-item-1">
-                        <em className="fa fa-th-large">&nbsp;</em> Data <span data-toggle="collapse"
-                                                                              href="#sub-item-1"
-                                                                              className="icon pull-right">
+
+                    <li><NavLink to={"/shop"} className="" href="#">
+                        <span className="fa fa-shopping-cart">&nbsp;</span> Shops
+                    </NavLink></li>
+                    <li><NavLink to="/catalog" className="" href="#">
+                        <span className="fa fa-folder-open">&nbsp;</span> Catalog
+                    </NavLink></li>
+                    <li><NavLink to={"/category"} className="">
+                        <span className="fa fa-th-list">&nbsp;</span> Category
+                    </NavLink></li>
+                    <li><NavLink to={"/subCategory"} className="">
+                        <span className="fa fa-grip-horizontal">&nbsp;</span> Sub Category
+                    </NavLink></li>
+                    <li><NavLink to={"/product"} className="">
+                        <span className="fa fa-couch">&nbsp;</span> Product
+                    </NavLink></li>
+                    <li className="parent ">
+                        <a className="" aria-expanded="true" data-toggle="collapse" href="#sub-item-1">
+                            <em className="fa fa-cog">&nbsp;</em> Settings
+                            <span data-toggle="collapse"
+                                  href="#sub-item-1"
+                                  className="icon pull-right collapsed"
+                                  aria-expanded="false"
+                            >
                         <em className="fa fa-plus">&nbsp;</em>
                     </span>
-                    </a>
+                        </a>
                         <ul className="children collapse" id="sub-item-1">
-                            <li><NavLink to="/catalog" className="" href="#">
-                                <span className="fa fa-folder-open">&nbsp;</span> Catalog
+                            <li><NavLink to={"/sale"} className="">
+                                <span className="fa fa-certificate">&nbsp;</span> Sale
                             </NavLink></li>
-                            <li><NavLink to={"/category"} className="">
-                                <span className="fa fa-th-list">&nbsp;</span> Category
-                            </NavLink></li>
-                            <li><NavLink to={"/subCategory"} className="">
-                                <span className="fa fa-grip-horizontal">&nbsp;</span> Sub Category
-                            </NavLink></li>
-                            <li><NavLink to={"/product"} className="">
-                                <span className="fa fa-couch">&nbsp;</span> Product
-                            </NavLink></li>
-                            <li><NavLink to={"/shop"} className="" href="#">
-                                <span className="fa fa-shopping-cart">&nbsp;</span> Shops
+                            <li><NavLink to={"/admins"} className="">
+                                <span className="fa fa-user">&nbsp;</span> Admins
                             </NavLink></li>
                         </ul>
                     </li>

@@ -52,8 +52,8 @@ func Update(object interface{}) error {
 	}
 	return nil
 }
-func GetWithQuery(object interface{}, property, value string) error {
-	DB.Where(property, value).Find(object)
+func GetWithQuery(object interface{}, property interface{}, value ...interface{}) error {
+	DB.Where(property, value...).Find(object)
 	if DB.Error != nil {
 		return DB.Error
 	}
@@ -72,10 +72,29 @@ func GetComplete(object interface{}, query ...string) error {
 	return nil
 }
 
-func GetRelated(parent,object interface{}) error{
-	DB.Model(parent).Related(object)
+func GetRelated(parent, object interface{}, query ...string) error {
+	temp := DB.Set("gorm:auto_preload", true)
+	for _, el := range query {
+		temp = temp.Preload(el)
+	}
+	temp.Model(parent).Related(object)
 	if DB.Error != nil {
 		return DB.Error
 	}
 	return nil
+}
+
+func GetByOrder(obj interface{}, query string, preLoads ...string) error {
+	temp := DB.Set("gorm:auto_preload", true)
+	for _, el := range preLoads {
+		temp = temp.Preload(el)
+	}
+	temp.Order(query).First(obj)
+	return nil
+}
+
+func GetCount(obj interface{}) int {
+	count := 0
+	DB.Find(obj).Count(&count)
+	return count
 }

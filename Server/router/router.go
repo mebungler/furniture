@@ -74,6 +74,12 @@ var routes = Routes{
 	},
 	Route{
 		"login",
+		"GET",
+		"/api/category/{id}/{isView}",
+		handlers.CategoryGet,
+	},
+	Route{
+		"login",
 		"POST",
 		"/api/category",
 		handlers.CategoryAdd,
@@ -101,6 +107,18 @@ var routes = Routes{
 	},
 	Route{
 		"login",
+		"GET",
+		"/api/subCategory/{id}",
+		handlers.SubCategoryGet,
+	},
+	Route{
+		"login",
+		"GET",
+		"/api/subCategory/{id}/{isView}",
+		handlers.SubCategoryGet,
+	},
+	Route{
+		"login",
 		"POST",
 		"/api/subCategory",
 		handlers.SubCategoryAdd,
@@ -124,6 +142,30 @@ var routes = Routes{
 		"login",
 		"GET",
 		"/api/product",
+		handlers.ProductGet,
+	},
+	Route{
+		"login",
+		"GET",
+		"/api/product/{id}",
+		handlers.ProductGet,
+	},
+	Route{
+		"login",
+		"GET",
+		"/api/product/{id}/{isView}",
+		handlers.ProductGet,
+	},
+	Route{
+		"login",
+		"GET",
+		"/api/product/{id}/{isView}/{isProduct}",
+		handlers.ProductGet,
+	},
+	Route{
+		"login",
+		"GET",
+		"/api/product/{isView}",
 		handlers.ProductGet,
 	},
 	Route{
@@ -178,6 +220,48 @@ var routes = Routes{
 		handlers.ShopRemove,
 	},
 	//endregion
+	Route{
+		"named",
+		"GET",
+		"/api/main",
+		handlers.GetMainView,
+	},
+	Route{
+		"named",
+		"GET",
+		"/api/statistics",
+		handlers.GetStatistics,
+	},
+	Route{
+		"named",
+		"GET",
+		"/api/sale",
+		handlers.GetSale,
+	},
+	Route{
+		"named",
+		"POST",
+		"/api/admins",
+		handlers.AdminAdd,
+	},
+	Route{
+		"named",
+		"PUT",
+		"/api/admins",
+		handlers.AdminUpdate,
+	},
+	Route{
+		"named",
+		"DELETE",
+		"/api/admins/{id}",
+		handlers.AdminRemove,
+	},
+	Route{
+		"named",
+		"GET",
+		"/api/admins",
+		handlers.AdminGet,
+	},
 }
 
 func NewRouter() http.Handler {

@@ -2,7 +2,7 @@ import React from 'react';
 import api from '../../api/admin';
 import {connect} from 'react-redux';
 import uuid from 'uuid';
-import {populateCategoriesAsync} from "../../actions/admin";
+import {populateCatalogsAsync, populateCategoriesAsync} from "../../actions/admin";
 
 class SubCategoryAddOrEditPage extends React.Component {
     state = {
@@ -13,7 +13,8 @@ class SubCategoryAddOrEditPage extends React.Component {
             Views: "",
             Description: "",
             ShortDescription: "",
-            CatalogID: ""
+            CatalogID: "",
+            CategoryID: ""
         },
     };
     onTextChange = (e) => {
@@ -34,18 +35,25 @@ class SubCategoryAddOrEditPage extends React.Component {
             fr.readAsDataURL(target.files[0]);
         }
     };
+    save = () => {
+        api.subCategory.update(this.state.SubCategory).then(r => {
+            this.props.history.go(0);
+        });
+    };
     add = () => {
-        api.subCategory.add(this.state.SubCategory);
-        this.props.history.go(0);
+        api.subCategory.add(this.state.SubCategory).then(r => {
+            this.props.history.go(0);
+        });
     };
 
     componentDidMount() {
         let {isNew, subCategory} = this.props;
+        this.props.dispatch(populateCategoriesAsync());
+        this.props.dispatch(populateCatalogsAsync());
         if (!isNew) {
             this.setState({SubCategory: subCategory});
             return;
         }
-        this.props.dispatch(populateCategoriesAsync());
         this.setState({SubCategory: {...this.state.SubCategory, ID: uuid()}})
     }
 
@@ -113,16 +121,44 @@ class SubCategoryAddOrEditPage extends React.Component {
                                         <div className="form-group">
                                             <label className="col-md-3 control-label">Catalog</label>
                                             <div className="col-md-9">
-                                                <select onChange={({target}) => this.setState({
-                                                    SubCategory: {
-                                                        ...this.state.SubCategory,
-                                                        CatalogID: target.value
-                                                    }
-                                                })}
+                                                <select onChange={({target}) => {
+                                                    this.setState({
+                                                        SubCategory: {
+                                                            ...this.state.SubCategory,
+                                                            CatalogID: target.value
+                                                        }
+                                                    });
+                                                }}
                                                         className="form-control">
                                                     <option>Select catalog...</option>
-                                                    {this.props.categories.map((item, index) => {
+                                                    {this.props.catalogs.map((item, index) => {
                                                         if (this.state.SubCategory.CatalogID === item.ID)
+                                                            return (
+                                                                <option value={item.id} selected>{item.Name}</option>);
+                                                        return (
+                                                            <option value={item.ID}
+                                                            >{item.Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label className="col-md-3 control-label">Category</label>
+                                            <div className="col-md-9">
+                                                <select onChange={({target}) => {
+                                                    this.setState({
+                                                        SubCategory: {
+                                                            ...this.state.SubCategory,
+                                                            CategoryID: target.value
+                                                        }
+                                                    });
+                                                }}
+                                                        className="form-control">
+                                                    <option>Select category...</option>
+                                                    {this.props.categories.map((item, index) => {
+                                                        if (this.state.SubCategory.CategoryID === item.ID)
                                                             return (
                                                                 <option value={item.id} selected>{item.Name}</option>);
                                                         return (
@@ -191,9 +227,10 @@ class SubCategoryAddOrEditPage extends React.Component {
                                     </fieldset>
                                     <div className="col-md-8"/>
                                     <div className="col-md-4 widget-right">
-                                        <a onClick={this.add}
+                                        <a onClick={this.props.isNew ? this.add : this.save}
                                            className="btn btn-success pull-right btn-block">
-                                            <span className="fa fa-plus"/> Add
+                                            <span
+                                                className={this.props.isNew ? "fa fa-plus" : "fa fa-save"}/> {this.props.isNew ? "Add" : "Save"}
                                         </a>
                                     </div>
                                 </form>
@@ -206,10 +243,11 @@ class SubCategoryAddOrEditPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({subCategory, categories}) => ({
+const mapStateToProps = ({subCategory, categories, catalogs}) => ({
     subCategory: subCategory,
     isNew: Object.keys(subCategory).length === 0,
-    categories
+    categories,
+    catalogs,
 });
 
 export default connect(mapStateToProps)(SubCategoryAddOrEditPage);

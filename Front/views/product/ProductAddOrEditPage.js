@@ -2,7 +2,8 @@ import React from 'react';
 import api from '../../api/admin';
 import {connect} from 'react-redux';
 import uuid from 'uuid';
-import {populateCatalogsAsync, populateSubCategoriesAsync} from "../../actions/admin";
+import {populateCatalogsAsync, populateCategoriesAsync, populateSubCategoriesAsync} from "../../actions/admin";
+import AutocompleteInput from "../../components/input/AutocompleteInput";
 
 class ProductAddOrEditPage extends React.Component {
     state = {
@@ -24,10 +25,23 @@ class ProductAddOrEditPage extends React.Component {
     onTextChange = (e) => {
         this.setState({...this.state, Product: {...this.state.Product, [e.target.name]: e.target.value}})
     };
-    onPropertyChange = ({target}, index) => {
+    onPropertyChange = (e, index, obj) => {
+        if (!obj) {
+            let {target} = e;
+            let properties = this.state.Product.Properties;
+            properties[index][target.name] = target.value;
+            this.setState({...this.state, Product: {...this.state.Product, Properties: properties}})
+            return;
+        }
+        let {newValue} = obj;
         let properties = this.state.Product.Properties;
-        properties[index][target.name] = target.value;
-        this.setState({...this.state, Product: {...this.state.Product, Properties: properties}})
+        properties[index].Name = newValue;
+        this.setState({...this.state, Product: {...this.state.Product, Properties: properties}});
+    };
+    save = () => {
+        api.product.update(this.state.Product).then(r => {
+            this.props.history.go(0);
+        });
     };
     onFileChange = ({target}, isGallery = false) => {
         if (target.files[0]) {
@@ -59,18 +73,20 @@ class ProductAddOrEditPage extends React.Component {
         }
     };
     add = () => {
-        api.product.add(this.state.Product);
-        this.props.history.go(0);
+        api.product.add(this.state.Product).then(r => {
+            this.props.history.go(0);
+        });
     };
 
     componentDidMount() {
         let {isNew, product} = this.props;
+        this.props.dispatch(populateCatalogsAsync());
+        this.props.dispatch(populateCategoriesAsync());
+        this.props.dispatch(populateSubCategoriesAsync());
         if (!isNew) {
             this.setState({Product: product});
             return;
         }
-        this.props.dispatch(populateCatalogsAsync());
-        this.props.dispatch(populateSubCategoriesAsync());
         this.setState({Product: {...this.state.Product, ID: uuid()}})
     }
 
@@ -171,8 +187,33 @@ class ProductAddOrEditPage extends React.Component {
                                                         className="form-control">
                                                     <option>Select catalog...</option>
                                                     {this.props.catalogs.map((item, index) => {
-                                                        console.log(this.state.Product.CatalogID === item.ID);
                                                         if (this.state.Product.CatalogID === item.ID)
+                                                            return (
+                                                                <option value={item.id} selected>{item.Name}</option>);
+                                                        return (
+                                                            <option value={item.ID}
+                                                            >{item.Name}</option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <label className="col-md-3 control-label">Category</label>
+                                            <div className="col-md-9">
+                                                <select onChange={({target}) => {
+                                                    this.setState({
+                                                        Product: {
+                                                            ...this.state.Product,
+                                                            CategoryID: target.value
+                                                        }
+                                                    });
+                                                }}
+                                                        className="form-control">
+                                                    <option>Select category...</option>
+                                                    {this.props.categories.map((item, index) => {
+                                                        if (this.state.Product.CategoryID === item.ID)
                                                             return (
                                                                 <option value={item.id} selected>{item.Name}</option>);
                                                         return (
@@ -196,7 +237,6 @@ class ProductAddOrEditPage extends React.Component {
                                                         className="form-control">
                                                     <option>Select subcategory...</option>
                                                     {this.props.subCategories.map((item, index) => {
-                                                        console.log(this.state.Product.SubCategoryID === item.ID);
                                                         if (this.state.Product.SubCategoryID === item.ID)
                                                             return (
                                                                 <option value={item.id} selected>{item.Name}</option>);
@@ -216,12 +256,13 @@ class ProductAddOrEditPage extends React.Component {
                                                     return (
                                                         <div className="row">
                                                             <div className="col-md-6">
-                                                                <input id="email" name="Name" type="text"
-                                                                       placeholder="Name"
-                                                                       className="form-control"
-                                                                       key={index}
-                                                                       value={el.Name}
-                                                                       onChange={e => this.onPropertyChange(e, index)}
+                                                                <AutocompleteInput id="email" name="Name" type="text"
+                                                                                   placeholder="Name"
+                                                                                   className="form-control"
+                                                                                   key={index}
+                                                                                   value={el.Name}
+                                                                                   onChange={(e, val) => this.onPropertyChange(e, index, val)}
+                                                                                   suggestions={[{Name: "dsa",}, {Name: "aaa"}]}
                                                                 />
                                                             </div>
                                                             <div className="col-md-5">
@@ -375,9 +416,10 @@ class ProductAddOrEditPage extends React.Component {
                                     </fieldset>
                                     <div className="col-md-8"/>
                                     <div className="col-md-4 widget-right">
-                                        <a onClick={this.add}
+                                        <a onClick={this.props.isNew ? this.add : this.save}
                                            className="btn btn-success pull-right btn-block">
-                                            <span className="fa fa-plus"/> Add
+                                            <span
+                                                className={this.props.isNew ? "fa fa-plus" : "fa fa-save"}/> {this.props.isNew ? "Add" : "Save"}
                                         </a>
                                     </div>
                                 </form>
@@ -390,11 +432,12 @@ class ProductAddOrEditPage extends React.Component {
     }
 }
 
-const mapStateToProps = ({product, catalogs, subCategories}) => ({
+const mapStateToProps = ({product, catalogs, subCategories, categories}) => ({
     product: product,
     isNew: Object.keys(product).length === 0,
     catalogs,
-    subCategories
+    subCategories,
+    categories
 });
 
 export default connect(mapStateToProps)(ProductAddOrEditPage);

@@ -5,8 +5,9 @@ import {
     catalogs,
     categories,
     category,
+    dashboard,
     product,
-    products,
+    products, sale,
     shop,
     shops,
     subCategories,
@@ -27,7 +28,9 @@ export default () => {
             product,
             products,
             shops,
-            shop
+            shop,
+            dashboard,
+            sale
         }),
         applyMiddleware(thunk)
     );

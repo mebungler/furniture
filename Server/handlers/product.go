@@ -12,6 +12,32 @@ import (
 
 func ProductGet(w http.ResponseWriter, r *http.Request) {
 	var categories []models.Product
+	id := mux.Vars(r)["id"]
+	isView := mux.Vars(r)["isView"]
+	isProduct:=mux.Vars(r)["isProduct"]
+	if isProduct!=""{
+		if isView == "true"{
+			category := models.Product{ID: id}
+			database.Get(&category)
+			category.Views = category.Views + 1
+			database.Update(&category)
+		}
+		return
+	}
+	if id != "" {
+		category := models.SubCategory{ID: id}
+		database.GetRelated(&category, &categories, "Properties", "Photos")
+		if isView == "true"{
+			database.Get(&category)
+			category.Views = category.Views + 1
+			database.Update(&category)
+		}
+		w.WriteHeader(http.StatusOK)
+		if err := json.NewEncoder(w).Encode(categories); err != nil {
+			panic(err)
+		}
+		return
+	}
 	database.GetComplete(&categories, "Properties", "Photos")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(categories); err != nil {

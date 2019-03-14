@@ -33,15 +33,16 @@ class ShopAddOrEditPage extends React.Component {
         }
     };
     add = () => {
-        api.shop.add(this.state.Shop);
-        this.props.history.go(-1);
-        this.props.history.go(0);
+        api.shop.add(this.state.Shop).then(r => {
+            this.props.history.go(0);
+        });
     };
 
     save = () => {
-        api.shop.update(this.state.Catalog);
-        this.props.history.go(-1);
-        this.props.history.go(0);
+        api.shop.update(this.state.Catalog).then(r => {
+            this.props.history.go(0);
+            x
+        });
     };
 
     componentDidMount() {

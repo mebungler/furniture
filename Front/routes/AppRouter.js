@@ -18,6 +18,7 @@ import ProductAddOrEditPage from "../views/product/ProductAddOrEditPage";
 import ShopPage from "../views/shop/ShopPage";
 import ShopDetailPage from "../views/shop/ShopDetailPage";
 import ShopAddOrEditPage from "../views/shop/ShopAddOrEditPage";
+import SaleView from "../views/sale/SaleView";
 
 const AppRouter = () => (
     <Switch>
@@ -38,6 +39,8 @@ const AppRouter = () => (
         <AdminRoute path="/shop" component={ShopPage}/>
         <AdminRoute path="/shopDetail" component={ShopDetailPage}/>
         <AdminRoute path="/shopAddOrEdit" component={ShopAddOrEditPage}/>
+        <AdminRoute path="/sale" component={SaleView}/>
+        <AdminRoute path="/admins" component={ShopAddOrEditPage}/>
     </Switch>
 );
 

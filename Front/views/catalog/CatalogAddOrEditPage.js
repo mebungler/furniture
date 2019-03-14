@@ -34,13 +34,14 @@ class CatalogAddOrEditPage extends React.Component {
         }
     };
     add = () => {
-        api.catalog.add(this.state.Catalog);
-        this.props.history.go(-1);
+        api.catalog.add(this.state.Catalog).then(r => {
+            this.props.history.go(0);
+        });
     };
     save = () => {
-        api.catalog.update(this.state.Catalog);
-        this.props.history.go(-1);
-        this.props.history.go(0);
+        api.catalog.update(this.state.Catalog).then(r => {
+            this.props.history.go(0);
+        });
     };
 
     componentDidMount() {
@@ -57,7 +58,6 @@ class CatalogAddOrEditPage extends React.Component {
     render() {
         let {Catalog} = this.state;
         let {shop: Shop, isNew} = this.props;
-        console.log(Shop);
         return (
             <div>
                 <div className="row">
@@ -93,7 +93,6 @@ class CatalogAddOrEditPage extends React.Component {
                                     className="fa fa-th-list"/> Categories</a>
                                 <a onClick={() => {
                                     api.catalog.delete(this.state.Catalog.ID);
-                                    this.props.history.go(-1);
                                     this.props.history.go(0);
                                 }} className="btn btn-danger btn-block"><span className="fa fa-trash"/> Delete</a>
                             </div>
@@ -139,7 +138,7 @@ class CatalogAddOrEditPage extends React.Component {
                                                 })}
                                                         className="form-control">
                                                     <option>Select shop...</option>
-                                                    {!isNew ? this.props.shops.map((item, index) => {
+                                                    {isNew ? this.props.shops.map((item, index) => {
                                                         if (this.state.Catalog.ShopID === item.ID)
                                                             return (
                                                                 <option value={item.id} selected>{item.Name}</option>);

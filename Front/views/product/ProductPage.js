@@ -23,7 +23,10 @@ class ProductPage extends React.Component {
                     <div className="panel-heading">
                         Product
                         <span className="pull-right">
-                               <a onClick={() => this.props.history.push("/productAddOrEdit")}
+                               <a onClick={() => {
+                                   this.props.dispatch(storeProduct({}));
+                                   this.props.history.push("/productAddOrEdit")
+                               }}
                                   className="btn btn-md btn-success">
                                    <span className="fa fa-plus"/> Add Product
                                </a>

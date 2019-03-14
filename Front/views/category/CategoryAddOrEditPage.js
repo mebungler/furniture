@@ -36,14 +36,14 @@ class CategoryAddOrEditPage extends React.Component {
         }
     };
     add = () => {
-        api.category.add(this.state.Category);
-        this.props.history.go(-1);
-        this.props.history.go(0);
+        api.category.add(this.state.Category).then(r => {
+            this.props.history.go(0);
+        });
     };
     save = () => {
-        api.category.update(this.state.Category);
-        this.props.history.go(-1);
-        this.props.history.go(0);
+        api.category.update(this.state.Category).then(r => {
+            this.props.history.go(0);
+        });
     };
 
     componentDidMount() {

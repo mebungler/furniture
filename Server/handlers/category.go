@@ -15,16 +15,22 @@ import (
 func CategoryGet(w http.ResponseWriter, r *http.Request) {
 	var categories []models.Category
 	id := mux.Vars(r)["id"]
+	isView := mux.Vars(r)["isView"]
 	if id != "" {
 		catalog := models.Catalog{ID: id}
 		database.GetRelated(&catalog, &categories)
+		if isView == "true" {
+			database.Get(&catalog)
+			catalog.Views = catalog.Views + 1
+			database.Update(&catalog)
+		}
 		w.WriteHeader(http.StatusOK)
 		if err := json.NewEncoder(w).Encode(categories); err != nil {
 			panic(err)
 		}
 		return
 	}
-	database.GetAll(&categories)
+	database.GetWithQuery(&categories, "is_sale is ? OR is_sale = ?", nil, false)
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(categories); err != nil {
 		panic(err)

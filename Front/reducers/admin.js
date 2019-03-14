@@ -101,10 +101,31 @@ export const shop = (state = defaultState, action) => {
     }
 };
 
+export const sale = (state = defaultState, action) => {
+    switch (action.type) {
+        case "STORE_SALE":
+            return {...action.sale};
+        default :
+            return state
+    }
+};
+
+
 export const shops = (state = [], action) => {
     switch (action.type) {
         case "SHOPS_LOADED":
             return action.shops;
+        default :
+            return state
+    }
+};
+
+export const dashboard = (state = {}, action) => {
+    switch (action.type) {
+        case "STORE_MAIN":
+            return {...state, main: action.main};
+        case "STORE_STATISTICS":
+            return {...state, statistics: action.statistics};
         default :
             return state
     }

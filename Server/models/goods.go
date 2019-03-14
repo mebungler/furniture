@@ -20,12 +20,14 @@ type Category struct {
 	Photo            string
 	ShortDescription string
 	Description      string
+	IsSale           bool
 	ShopID           string
 }
 
 type SubCategory struct {
 	ID               string `gorm:"primary_key"`
 	CategoryID       string
+	CatalogID        string
 	Name             string
 	Views            int
 	Products         []Product
@@ -37,10 +39,13 @@ type SubCategory struct {
 
 type Product struct {
 	ID               string `gorm:"primary_key"`
+	CategoryID       string
+	CatalogID        string
 	SubCategoryID    string
 	Photo            string
 	Description      string
 	ShortDescription string
+	Views            int
 	Photos           []Image
 	PriceNew         string
 	PriceOld         string

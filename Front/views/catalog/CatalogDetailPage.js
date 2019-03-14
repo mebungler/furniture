@@ -47,12 +47,11 @@ class CatalogDetailPage extends React.Component {
                                     className="fa fa-th-list"/> Categories</a>
                                 <a onClick={() => {
                                     this.props.dispatch(storeCatalog(catalog));
-                                    this.   props.history.push("/catalogAddOrEdit");
+                                    this.props.history.push("/catalogAddOrEdit");
                                 }} className="btn btn-primary btn-block"><span
                                     className="fa fa-edit"/> Edit</a>
                                 <a onClick={() => {
                                     api.category.delete(this.state.Catalog.ID);
-                                    this.props.history.go(-1);
                                     this.props.history.go(0);
                                 }} className="btn btn-danger btn-block"><span className="fa fa-trash"/> Delete</a>
                             </div>

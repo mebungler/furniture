@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios'
 
-export const url = "http://localhost:8080";
+export const url = "http://localhost:8040";
 export const urlResolve = param => (url + param);
 
 export default {
@@ -80,4 +80,22 @@ export default {
             .then(res => res)
             .catch(({response}) => response),
     },
+    dashboard: {
+        getMain: () => axios.get(url + "/api/main")
+            .then(re => re)
+            .catch(({response}) => response),
+        getStatistics: () => axios.get(url + "/api/statistics")
+            .then(re => re)
+            .catch(({response}) => response)
+    },
+    sale:{
+        get:()=>axios.get(url + "/api/sale")
+            .then(re => re)
+            .catch(({response}) => response),
+    },
+    admins:{
+        get:()=>axios.get(url + "/api/admins")
+            .then(re => re)
+            .catch(({response}) => response),
+    }
 }

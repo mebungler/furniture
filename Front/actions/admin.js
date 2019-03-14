@@ -104,8 +104,36 @@ export const populateShopAsync = (id) => ((dispatch) => {
     )
 });
 
+export const populateSaleAsync = () => ((dispatch) => {
+    return (
+        api.sale.get()
+            .then(res => {
+                dispatch(storeSale(res.data));
+                return res
+            }).catch(({data}) => dispatch(serverError(data)))
+    )
+});
+
+export const populateDashboardDataAsync = () => ((dispatch) => {
+    api.dashboard.getStatistics()
+        .then(res => {
+            dispatch(storeStatistics(res.data));
+            api.dashboard.getMain()
+                .then(res => {
+                    dispatch(storeMain(res.data));
+                    console.log(res.data)
+                })
+                .catch(({data}) => dispatch(serverError(data)))
+        })
+        .catch(({data}) => dispatch(serverError(data)))
+});
+
 export const storeCatalog = catalog => ({type: "STORE_CATALOG", catalog});
 export const storeCategory = category => ({type: "STORE_CATEGORY", category});
 export const storeSubCategory = subCategory => ({type: "STORE_SUBCATEGORY", subCategory});
 export const storeProduct = product => ({type: "STORE_PRODUCT", product});
 export const storeShop = shop => ({type: "STORE_SHOP", shop});
+export const storeSale = sale => ({type: "STORE_SALE", sale});
+export const storeMain = main => ({type: "STORE_MAIN", main});
+export const storeStatistics = statistics => ({type: "STORE_STATISTICS", statistics});
+

@@ -23,7 +23,10 @@ class ShopPage extends React.Component {
                     <div className="panel-heading">
                         Shop
                         <span className="pull-right">
-                               <a onClick={() => this.props.history.push("/shopAddOrEdit")}
+                               <a onClick={() => {
+                                   this.props.dispatch(storeShop({}));
+                                   this.props.history.push("/shopAddOrEdit");
+                               }}
                                   className="btn btn-md btn-success">
                                    <span className="fa fa-plus"/> Add Shop
                                </a>

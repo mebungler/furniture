@@ -23,7 +23,10 @@ class SubCategoryPage extends React.Component {
                     <div className="panel-heading">
                         SubCategory
                         <span className="pull-right">
-                               <a onClick={() => this.props.history.push("/subCategoryAddOrEdit")}
+                               <a onClick={() => {
+                                   this.props.dispatch(storeSubCategory({}));
+                                   this.props.history.push("/subCategoryAddOrEdit")
+                               }}
                                   className="btn btn-md btn-success">
                                    <span className="fa fa-plus"/> Add SubCategory
                                </a>
